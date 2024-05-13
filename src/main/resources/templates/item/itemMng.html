@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+        $(document).ready(function(){
+            $("#searchBtn").on("click",function(e) {
+                e.preventDefault();
+                page(0);
+            });
+        });
+
+        function page(page){
+            var searchDateType = $("#searchDateType").val();
+            var searchSellStatus = $("#searchSellStatus").val();
+            var searchBy = $("#searchBy").val();
+            var searchQuery = $("#searchQuery").val();
+
+            location.href="/admin/items/" + page + "?searchDateType=" + searchDateType
+            + "&searchSellStatus=" + searchSellStatus
+            + "&searchBy=" + searchBy
+            + "&searchQuery=" + searchQuery;
+        }
+
+    </script>
+</th:block>
+
+<th:block layout:fragment="css">
+    <style>
+        select{
+            margin-right:10px;
+        }
+    </style>
+</th:block>
+
+<div layout:fragment="content">
+
+    <form th:action="@{'/admin/items/' + ${items}}" role="form" method="get" th:object="${items}">
+        <table class="table">
+            <thead>
+            <tr>
+                <td>Item Id</td>
+                <td>Item Name</td>
+                <td>Status</td>
+                <td>Owner</td>
+                <td>Registration Date</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item, status: ${items}">
+                <td th:text="${item.id}"></td>
+                <td>
+                    <a th:href="'/admin/item/'+${item.id}" th:text="${item.itemName}"></a>
+                </td>
+                <td th:text="${item.stockNumber > 0} ? 'In Stock' : 'Out of Stock'"></td>
+                <td th:text="${item.createdBy}"></td>
+                <td th:text="${item.regTime}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </form>
+
+</div>
+
+</html>
